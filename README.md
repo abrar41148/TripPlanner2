@@ -53,16 +53,32 @@ A feature-rich, modern Android travel assistant designed to simplify trip planni
 
 ---
 
-## 🔑 Secure API Configuration
+## 🔑 Secure API Configuration & Firebase Setup
 
-No keys are required in `local.properties` at compile time. Both API keys are configured at runtime directly inside the app:
+To keep production credentials secure, this repository uses a dual-method configuration strategy separating runtime user keys from central build-time services.
+
+### 1. Firebase Service Setup (Build-Time)
+The app uses Firebase Authentication to manage user signups and logins. To prevent credential leaks, the actual configuration is kept out of Git.
+
+1. **Automatic Template Fallback**: A template `app/google-services.json.template` is provided. If `app/google-services.json` is missing, the Gradle build will automatically copy the template so the project builds out of the box.
+2. **Adding Your Production Firebase Config**:
+   - Go to the [Firebase Console](https://console.firebase.google.com/).
+   - Create a project and add an Android app with package name `com.example.tripplanner`.
+   - Download the generated `google-services.json` configuration file.
+   - Place it inside the `app/` folder (overwriting the placeholder/generated `app/google-services.json`).
+   - The file `app/google-services.json` is ignored in `.gitignore` to guarantee your API keys are never checked into version control.
+
+### 2. Google Places & Gemini API Keys (Runtime)
+No Google Cloud or Gemini keys are hardcoded or required at build time. These are entered directly in the app at runtime:
 
 1. Build and run the project in Android Studio.
-2. Sign up or log in.
+2. Sign up or log in (Firebase will run in offline demo mode if dummy keys are used, or authenticate online if real ones are provided).
 3. Tap **My Profile** on the Dashboard.
-4. Input your **Google Places API Key** and **Gemini API Key**, and click **Save**.
+4. Input your **Google Places API Key** and **Google Gemini API Key**, and click **Save**.
+5. The keys are encrypted/secured in your device's local private `SharedPreferences`.
 
 ---
+
 
 ## 📂 Core Package Structure
 

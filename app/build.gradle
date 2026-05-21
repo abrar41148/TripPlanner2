@@ -47,3 +47,20 @@ dependencies {
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 }
+
+task copyGoogleServicesJson {
+    doFirst {
+        def templateFile = file("google-services.json.template")
+        def targetFile = file("google-services.json")
+        if (!targetFile.exists() && templateFile.exists()) {
+            targetFile.text = templateFile.text
+        }
+    }
+}
+
+afterEvaluate {
+    if (tasks.findByName('preBuild')) {
+        preBuild.dependsOn copyGoogleServicesJson
+    }
+}
+
